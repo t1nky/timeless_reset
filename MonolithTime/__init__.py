@@ -30,10 +30,21 @@ class MonolithTime:
         )
 
     def __calc_next_reset(self):
+        # Reset itself takes about 2 seconds, that delay is considered in calculations:
+        # First reset is configured as 5 + 2 = 7 seconds
+        # After that, reset each 8 seconds. Timed something like that (example for solo reset):
+        #   1. Notification played - 0s
+        #   2. Starting to reset - 0.5s
+        #   3. New wave spawned - 2.5s
+        #   4. Kill enemies for 5.5s
+        #   5. Go to #1
+        firstReset = 5
+        resetDelay = 8
+
         nextSecondsDiff = (
-            self.seconds - 5
+            self.seconds - firstReset
             if self.minute == 5 and self.seconds == 14
-            else self.seconds - 8
+            else self.seconds - resetDelay
         )
 
         nextSeconds = 60 + nextSecondsDiff if nextSecondsDiff < 0 else nextSecondsDiff
